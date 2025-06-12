@@ -6,6 +6,8 @@ import '../../core/permissions/permissions_service.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../sensors/heading/heading_service.dart';
 import '../../sensors/cogspeed/cogspeed_service.dart';
+import '../../sensors/pitchheel/pitchheel_service.dart';
+import '../pitchheel/pitchheel_provider.dart';
 
 class SensorScreen extends ConsumerStatefulWidget {
   const SensorScreen({super.key});
@@ -19,8 +21,10 @@ class _SensorScreenState extends ConsumerState<SensorScreen> {
   String _error = '';
   late HeadingService _headingService;
   late CogSpeedService _cogSpeedService;
+  late PitchHeelService _pitchHeelService;
   Stream<double>? _headingStream;
   Stream<Position>? _positionStream;
+  Stream<Map<String, double>>? _pitchHeelStream;
 
   @override
   void initState() {
@@ -43,10 +47,12 @@ class _SensorScreenState extends ConsumerState<SensorScreen> {
 
       _headingService = ref.read(headingServiceProvider);
       _cogSpeedService = ref.read(cogSpeedServiceProvider);
+      _pitchHeelService = ref.read(pitchHeelServiceProvider);
 
       setState(() {
         _headingStream = _headingService.headingStream;
         _positionStream = _cogSpeedService.positionStream;
+        _pitchHeelStream = _pitchHeelService.pitchHeelStream;
         _isLoading = false;
       });
     } catch (e) {
@@ -75,23 +81,30 @@ class _SensorScreenState extends ConsumerState<SensorScreen> {
           return StreamBuilder<Position>(
             stream: _positionStream,
             builder: (context, positionSnapshot) {
-              final heading = headingSnapshot.data ?? 0.0;
-              final cog = (positionSnapshot.data?.heading ?? 0.0).toStringAsFixed(0);
-              final sog = ((positionSnapshot.data?.speed ?? 0.0) * 1.94384).toStringAsFixed(1);
+              return StreamBuilder<Map<String, double>>(
+                stream: _pitchHeelStream,
+                builder: (context, pitchHeelSnapshot) {
+                  final heading = headingSnapshot.data ?? 0.0;
+                  final cog = (positionSnapshot.data?.heading ?? 0.0).toStringAsFixed(0);
+                  final sog = ((positionSnapshot.data?.speed ?? 0.0) * 1.94384).toStringAsFixed(1);
+                  final pitch = (pitchHeelSnapshot.data?['pitch'] ?? 0.0).toStringAsFixed(0);
+                  final heel = (pitchHeelSnapshot.data?['heel'] ?? 0.0).toStringAsFixed(0);
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Heading: ${heading.toStringAsFixed(0)}°", style: const TextStyle(fontSize: 40)),
-                  const SizedBox(height: 20),
-                  Text("COG: $cog°", style: const TextStyle(fontSize: 40)),
-                  const SizedBox(height: 20),
-                  Text("Speed: $sog kn", style: const TextStyle(fontSize: 40)),
-                  const SizedBox(height: 20),
-                  Text("Pitch: 0°", style: const TextStyle(fontSize: 40)),  // placeholder
-                  const SizedBox(height: 20),
-                  Text("Heel: 0°", style: const TextStyle(fontSize: 40)),   // placeholder
-                ],
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Heading: ${heading.toStringAsFixed(0)}°", style: const TextStyle(fontSize: 40)),
+                      const SizedBox(height: 20),
+                      Text("COG: $cog°", style: const TextStyle(fontSize: 40)),
+                      const SizedBox(height: 20),
+                      Text("Speed: $sog kn", style: const TextStyle(fontSize: 40)),
+                      const SizedBox(height: 20),
+                      Text("Pitch: $pitch°", style: const TextStyle(fontSize: 40)),
+                      const SizedBox(height: 20),
+                      Text("Heel: $heel°", style: const TextStyle(fontSize: 40)),
+                    ],
+                  );
+                },
               );
             },
           );
