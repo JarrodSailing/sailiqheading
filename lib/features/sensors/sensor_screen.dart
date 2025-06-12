@@ -91,17 +91,64 @@ class _SensorScreenState extends ConsumerState<SensorScreen> {
                   final heel = (pitchHeelSnapshot.data?['heel'] ?? 0.0).toStringAsFixed(0);
 
                   return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Heading: ${heading.toStringAsFixed(0)}°", style: const TextStyle(fontSize: 40)),
-                      const SizedBox(height: 20),
-                      Text("COG: $cog°", style: const TextStyle(fontSize: 40)),
-                      const SizedBox(height: 20),
-                      Text("Speed: $sog kn", style: const TextStyle(fontSize: 40)),
-                      const SizedBox(height: 20),
-                      Text("Pitch: $pitch°", style: const TextStyle(fontSize: 40)),
-                      const SizedBox(height: 20),
-                      Text("Heel: $heel°", style: const TextStyle(fontSize: 40)),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Heading", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text("${heading.toStringAsFixed(0)}", style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("COG", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text("$cog", style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Speed", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text("$sog", style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Pitch", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text("$pitch", style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("Heel", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text("$heel", style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 },
