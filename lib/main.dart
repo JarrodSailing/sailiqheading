@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'features/heading/heading_screen.dart';
+import 'features/sensors/sensor_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: SailIqHeadingApp()));
@@ -17,7 +17,7 @@ class SailIqHeadingApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const HeadingScreen(),
+      home: const SensorScreen(),
     );
   }
 }
